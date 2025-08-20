@@ -1,65 +1,43 @@
-import { Component, OnInit, inject, HostListener } from '@angular/core'; // HostListener eklendi
-import { Router, RouterModule } from '@angular/router';
-import SharedModule from 'app/shared/shared.module';
+import { Component, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { NgIf, NgFor } from '@angular/common';
+
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
-import { NgbCollapseModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { LoginService } from 'app/login/login.service';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { CommonModule } from '@angular/common';
+import { ProfileInfo } from 'app/layouts/profiles/profile-info.model';
 
 @Component({
-  standalone: true,
   selector: 'jhi-navbar',
+  standalone: true,
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss',
-  imports: [RouterModule, SharedModule, NgbCollapseModule, NgbDropdownModule, FaIconComponent, CommonModule],
+  imports: [RouterLink, TranslateModule, NgIf, NgFor],
 })
 export class NavbarComponent implements OnInit {
-  inProduction?: boolean;
-  isNavbarCollapsed = true;
-  openAPIEnabled?: boolean;
-  account: Account | null = null;
-  isScrolled = false; // Kaydırma durumunu tutacak yeni değişken
+  private readonly accountService = inject(AccountService);
+  private readonly profileService = inject(ProfileService);
 
-  private loginService = inject(LoginService);
-  private accountService = inject(AccountService);
-  private profileService = inject(ProfileService);
-  private router = inject(Router);
-
-  // Sayfa kaydırıldığında bu fonksiyon çalışacak
-  @HostListener('window:scroll', [])
-  onWindowScroll(): void {
-    // Eğer 100 pikselden fazla aşağı kaydırıldıysa isScrolled true olur
-    this.isScrolled = window.pageYOffset > 100;
-  }
+  profileInfo: ProfileInfo | null = null;
+  private currentAccount: Account | null = null;
 
   ngOnInit(): void {
-    this.profileService.getProfileInfo().subscribe(profileInfo => {
-      this.inProduction = profileInfo.inProduction;
-      this.openAPIEnabled = profileInfo.openAPIEnabled;
+    this.profileService.getProfileInfo().subscribe(info => {
+      this.profileInfo = info;
     });
-    this.accountService.getAuthenticationState().subscribe(account => {
-      this.account = account;
-    });
+
+    // userIdentity signal’ını yakalıyoruz
+    this.currentAccount = this.accountService.getAuthenticatedUser()();
+    // parantez () -> signal değerini okumak için
   }
 
-  collapseNavbar(): void {
-    this.isNavbarCollapsed = true;
+  account(): Account | null {
+    return this.currentAccount;
   }
 
-  toggleNavbar(): void {
-    this.isNavbarCollapsed = !this.isNavbarCollapsed;
-  }
-
-  login(): void {
-    this.router.navigate(['/login']);
-  }
-
-  logout(): void {
-    this.collapseNavbar();
-    this.loginService.logout();
-    this.router.navigate(['']);
+  // testlerde kullanabilmen için
+  authenticate(account: Account | null): void {
+    this.accountService.authenticate(account);
+    this.currentAccount = account;
   }
 }

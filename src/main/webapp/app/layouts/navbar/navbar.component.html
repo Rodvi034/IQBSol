@@ -1,66 +1,12 @@
-<!-- Üst Bilgi Çubuğu (Bu kısım iqb.com.tr'den ilham alındığı için kalabilir) -->
-<div class="top-bar py-1 bg-light border-bottom">
-  <div class="container">
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="contact-info">
-        <span class="me-3"><i class="fas fa-phone-alt me-1 text-primary"></i> +90 212 691 60 44</span>
-        <span class="me-3"><i class="fas fa-envelope me-1 text-primary"></i> info&#64;iqb.solutions</span>
-        <span><i class="fas fa-map-marker-alt me-1 text-primary"></i> Istanbul, Turkey</span>
-      </div>
-      <div class="social-and-auth d-flex align-items-center">
-        <a href="https://www.linkedin.com/company/iqb-solutions/" target="_blank" class="text-secondary me-3" aria-label="LinkedIn">
-          <i class="fab fa-linkedin-in"></i>
-        </a>
-        <a class="nav-link" (click)="login()" *ngIf="!account">
-          <fa-icon icon="sign-in-alt"></fa-icon>
-          <span class="d-none d-md-inline">Giriş Yap</span>
-        </a>
-        <!-- Giriş yapıldıktan sonraki hesap menüsü buraya eklenebilir -->
-      </div>
-    </div>
-  </div>
-</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" routerLink="/">IQB Solutions</a>
 
-<!-- Ana Navigasyon Menüsü (AGENCY TEMASI STİLLERİ UYGULANDI) -->
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" [ngClass]="{ 'navbar-shrink': isScrolled }">
-  <div class="container">
-    <a class="navbar-brand" routerLink="/">
-      <img src="content/assets/img/logo-iqb.png" alt="IQB Solutions Logo" style="height: 40px;">
-    </a>
-    <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
-      Menu <i class="fas fa-bars ms-1"></i>
-    </button>
-    <div class="collapse navbar-collapse" [ngbCollapse]="isNavbarCollapsed">
-      <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">Ana Sayfa</a>
-        </li>
-        <li class="nav-item dropdown" ngbDropdown>
-          <a class="nav-link dropdown-toggle" href="#" ngbDropdownToggle>Hakkımızda</a>
-          <ul class="dropdown-menu" ngbDropdownMenu>
-            <li><a class="dropdown-item" routerLink="/hakkimizda-biz-kimiz" (click)="collapseNavbar()">Biz Kimiz?</a></li>
-            <li><a class="dropdown-item" routerLink="/yonetim-sistemi-politikasi" (click)="collapseNavbar()">Entegre Yönetim Sistemi Politikası</a></li>
-            <li><a class="dropdown-item" routerLink="/gizlilik-politikasi" (click)="collapseNavbar()">Gizlilik Politikası</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/ekibimiz" routerLinkActive="active" (click)="collapseNavbar()">Ekibimiz</a>
-        </li>
-        <li class="nav-item dropdown" ngbDropdown>
-          <a class="nav-link dropdown-toggle" href="#" ngbDropdownToggle>Ürünlerimiz</a>
-          <ul class="dropdown-menu" ngbDropdownMenu>
-            <li><a class="dropdown-item" href="https://www.iqb.com.tr/solutions/" target="_blank">Tüm Çözümler</a></li>
-            <li><a class="dropdown-item" href="https://www.iqb.com.tr/utilon-dsc/" target="_blank">UtilON DSC</a></li>
-            <li><a class="dropdown-item" href="https://www.iqb.com.tr/utilon-ipm/" target="_blank">UtilON IPM</a></li>
-            <li><a class="dropdown-item" href="https://www.iqb.com.tr/iqpower/" target="_blank">iqPower</a></li>
-            <li><a class="dropdown-item" href="https://www.iqb.com.tr/iqbig/" target="_blank">iqBIG</a></li>
-            <li><a class="dropdown-item" href="https://www.iqb.com.tr/iqot/" target="_blank">iqOT</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/iletisim" routerLinkActive="active" (click)="collapseNavbar()">İletişim</a>
-        </li>
-      </ul>
-    </div>
-  </div>
+  <ul class="navbar-nav ml-auto">
+    <li *ngIf="!account()" class="nav-item">
+      <a class="nav-link" routerLink="/login">{{ 'global.menu.account.login' | translate }}</a>
+    </li>
+    <li *ngIf="account()" class="nav-item">
+      <span class="nav-link">{{ account()?.login }}</span>
+    </li>
+  </ul>
 </nav>

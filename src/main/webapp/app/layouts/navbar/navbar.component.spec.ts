@@ -1,5 +1,3 @@
-jest.mock('app/login/login.service');
-
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
@@ -12,13 +10,14 @@ import { AccountService } from 'app/core/auth/account.service';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { LoginService } from 'app/login/login.service';
 
-import NavbarComponent from './navbar.component';
+import { NavbarComponent } from './navbar.component';
 
 describe('Navbar Component', () => {
   let comp: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
   let accountService: AccountService;
   let profileService: ProfileService;
+
   const account: Account = {
     activated: true,
     authorities: [],
@@ -47,50 +46,36 @@ describe('Navbar Component', () => {
   });
 
   it('should call profileService.getProfileInfo on init', () => {
-    // GIVEN
     jest.spyOn(profileService, 'getProfileInfo').mockReturnValue(of(new ProfileInfo()));
 
-    // WHEN
     comp.ngOnInit();
 
-    // THEN
     expect(profileService.getProfileInfo).toHaveBeenCalled();
   });
 
   it('should hold current authenticated user in variable account', () => {
-    // WHEN
     comp.ngOnInit();
 
-    // THEN
     expect(comp.account()).toBeNull();
 
-    // WHEN
-    accountService.authenticate(account);
+    comp.authenticate(account);
 
-    // THEN
     expect(comp.account()).toEqual(account);
 
-    // WHEN
-    accountService.authenticate(null);
+    comp.authenticate(null);
 
-    // THEN
     expect(comp.account()).toBeNull();
   });
 
   it('should hold current authenticated user in variable account if user is authenticated before page load', () => {
-    // GIVEN
-    accountService.authenticate(account);
+    comp.authenticate(account);
 
-    // WHEN
     comp.ngOnInit();
 
-    // THEN
     expect(comp.account()).toEqual(account);
 
-    // WHEN
-    accountService.authenticate(null);
+    comp.authenticate(null);
 
-    // THEN
     expect(comp.account()).toBeNull();
   });
 });

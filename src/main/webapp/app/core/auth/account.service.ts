@@ -1,4 +1,4 @@
-import { Injectable, Signal, inject, signal } from '@angular/core';
+import {Injectable, Signal, inject, signal, WritableSignal} from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
@@ -67,6 +67,9 @@ export class AccountService {
       );
     }
     return this.accountCache$.pipe(catchError(() => of(null)));
+  }
+  getAuthenticatedUser(): WritableSignal<Account | null> {
+    return this.userIdentity;
   }
 
   isAuthenticated(): boolean {
